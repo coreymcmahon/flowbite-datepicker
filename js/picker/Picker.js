@@ -16,6 +16,7 @@ import {
   onClickView,
   onClickPicker,
 } from '../events/pickerListeners.js';
+import { getDocument } from '../utils.js';
 
 function processPickerOptions(picker, options) {
   if (options.title !== undefined) {
@@ -233,7 +234,7 @@ export default class Picker {
     let left;
     let top;
 
-    if (container === document.body) {
+    if (container === getDocument()?.body) {
       scrollTop = window.scrollY;
       left = inputLeft + window.scrollX;
       top = inputTop + scrollTop;

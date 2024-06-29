@@ -588,7 +588,12 @@ var defaultOptions = {
   weekStart: 0
 };
 
-var range = document.createRange();
+function getDocument() {
+  return typeof document !== 'undefined' ? document : null;
+}
+
+var _getDocument;
+var range = (_getDocument = getDocument()) === null || _getDocument === void 0 ? void 0 : _getDocument.createRange();
 function parseHTML(html) {
   return range.createContextualFragment(html);
 }
@@ -1928,6 +1933,7 @@ var Picker = /*#__PURE__*/function () {
   }, {
     key: "place",
     value: function place() {
+      var _getDocument;
       var _this$element = this.element,
         classList = _this$element.classList,
         style = _this$element.style;
@@ -1953,7 +1959,7 @@ var Picker = /*#__PURE__*/function () {
       var scrollTop;
       var left;
       var top;
-      if (container === document.body) {
+      if (container === ((_getDocument = getDocument()) === null || _getDocument === void 0 ? void 0 : _getDocument.body)) {
         scrollTop = window.scrollY;
         left = inputLeft + window.scrollX;
         top = inputTop + scrollTop;
@@ -2226,7 +2232,8 @@ function onFocus(datepicker) {
 function onMousedown(datepicker, ev) {
   var el = ev.target;
   if (datepicker.picker.active || datepicker.config.showOnClick) {
-    el._active = el === document.activeElement;
+    var _getDocument;
+    el._active = el === ((_getDocument = getDocument()) === null || _getDocument === void 0 ? void 0 : _getDocument.activeElement);
     el._clicking = setTimeout(function () {
       delete el._active;
       delete el._clicking;
@@ -2256,8 +2263,9 @@ function onPaste(datepicker, ev) {
 
 // for the `document` to delegate the events from outside the picker/input field
 function onClickOutside(datepicker, ev) {
+  var _getDocument;
   var element = datepicker.element;
-  if (element !== document.activeElement) {
+  if (element !== ((_getDocument = getDocument()) === null || _getDocument === void 0 ? void 0 : _getDocument.activeElement)) {
     return;
   }
   var pickerElem = datepicker.picker.element;
@@ -2385,6 +2393,7 @@ var Datepicker = /*#__PURE__*/function () {
    * of date range picker
    */
   function Datepicker(element) {
+    var _getDocument;
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var rangepicker = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
     _classCallCheck(this, Datepicker);
@@ -2394,7 +2403,7 @@ var Datepicker = /*#__PURE__*/function () {
     // set up config
     var config = this.config = Object.assign({
       buttonClass: options.buttonClass && String(options.buttonClass) || 'button',
-      container: document.body,
+      container: options.body || ((_getDocument = getDocument()) === null || _getDocument === void 0 ? void 0 : _getDocument.body),
       defaultViewDate: today(),
       maxDate: undefined,
       minDate: undefined
@@ -2411,7 +2420,8 @@ var Datepicker = /*#__PURE__*/function () {
       initialDates = stringToArray(element.dataset.date, config.dateDelimiter);
       delete element.dataset.date;
     } else {
-      var container = options.container ? document.querySelector(options.container) : null;
+      var _getDocument2;
+      var container = options.container ? (_getDocument2 = getDocument()) === null || _getDocument2 === void 0 ? void 0 : _getDocument2.querySelector(options.container) : null;
       if (container) {
         config.container = container;
       }
@@ -2454,7 +2464,7 @@ var Datepicker = /*#__PURE__*/function () {
     } else {
       // set up event listeners in other modes
       var onMousedownDocument = onClickOutside.bind(null, this);
-      var listeners = [[inputField, 'keydown', onKeydown.bind(null, this)], [inputField, 'focus', onFocus.bind(null, this)], [inputField, 'mousedown', onMousedown.bind(null, this)], [inputField, 'click', onClickInput.bind(null, this)], [inputField, 'paste', onPaste.bind(null, this)], [document, 'mousedown', onMousedownDocument], [document, 'touchstart', onMousedownDocument], [window, 'resize', picker.place.bind(picker)]];
+      var listeners = [[inputField, 'keydown', onKeydown.bind(null, this)], [inputField, 'focus', onFocus.bind(null, this)], [inputField, 'mousedown', onMousedown.bind(null, this)], [inputField, 'click', onClickInput.bind(null, this)], [inputField, 'paste', onPaste.bind(null, this)], [getDocument(), 'mousedown', onMousedownDocument], [getDocument(), 'touchstart', onMousedownDocument], [window, 'resize', picker.place.bind(picker)]];
       registerListeners(this, listeners);
     }
   }
@@ -2517,7 +2527,7 @@ var Datepicker = /*#__PURE__*/function () {
         if (this.inputField.disabled) {
           return;
         }
-        if (this.inputField !== document.activeElement) {
+        if (this.inputField !== getDocument().activeElement) {
           this._showing = true;
           this.inputField.focus();
           delete this._showing;

@@ -1,6 +1,7 @@
 import {isInRange} from '../lib/utils.js';
 import {addDays, addMonths, addYears, startOfYearPeriod} from '../lib/date.js';
 import {goToPrevOrNext, switchView, unfocus} from './functions.js';
+import { getDocument } from '../utils.js';
 
 // Find the closest date that doesn't meet the condition for unavailable date
 // Returns undefined if no available date is found
@@ -173,7 +174,7 @@ export function onFocus(datepicker) {
 export function onMousedown(datepicker, ev) {
   const el = ev.target;
   if (datepicker.picker.active || datepicker.config.showOnClick) {
-    el._active = el === document.activeElement;
+    el._active = el === getDocument()?.activeElement;
     el._clicking = setTimeout(() => {
       delete el._active;
       delete el._clicking;

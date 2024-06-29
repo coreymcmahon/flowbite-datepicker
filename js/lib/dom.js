@@ -1,4 +1,6 @@
-const range = document.createRange();
+import { getDocument } from "../utils";
+
+const range = getDocument()?.createRange();
 
 export function parseHTML(html) {
   return range.createContextualFragment(html);

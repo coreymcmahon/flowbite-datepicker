@@ -9,6 +9,7 @@ import Picker from './picker/Picker.js';
 import {triggerDatepickerEvent} from './events/functions.js';
 import {onKeydown, onFocus, onMousedown, onClickInput, onPaste} from './events/inputFieldListeners.js';
 import {onClickOutside} from './events/otherListeners.js';
+import { getDocument } from './utils.js';
 
 function stringifyDates(dates, config) {
   return dates
@@ -135,7 +136,7 @@ export default class Datepicker {
     // set up config
     const config = this.config = Object.assign({
       buttonClass: (options.buttonClass && String(options.buttonClass)) || 'button',
-      container: document.body,
+      container: options.body || getDocument()?.body,
       defaultViewDate: today(),
       maxDate: undefined,
       minDate: undefined,
@@ -153,7 +154,7 @@ export default class Datepicker {
       initialDates = stringToArray(element.dataset.date, config.dateDelimiter);
       delete element.dataset.date;
     } else {
-      const container = options.container ? document.querySelector(options.container) : null;
+      const container = options.container ? getDocument()?.querySelector(options.container) : null;
       if (container) {
         config.container = container;
       }
@@ -204,8 +205,8 @@ export default class Datepicker {
         [inputField, 'mousedown', onMousedown.bind(null, this)],
         [inputField, 'click', onClickInput.bind(null, this)],
         [inputField, 'paste', onPaste.bind(null, this)],
-        [document, 'mousedown', onMousedownDocument],
-        [document, 'touchstart', onMousedownDocument],
+        [getDocument(), 'mousedown', onMousedownDocument],
+        [getDocument(), 'touchstart', onMousedownDocument],
         [window, 'resize', picker.place.bind(picker)]
       ];
       registerListeners(this, listeners);
@@ -293,7 +294,7 @@ export default class Datepicker {
       if (this.inputField.disabled) {
         return;
       }
-      if (this.inputField !== document.activeElement) {
+      if (this.inputField !== getDocument().activeElement) {
         this._showing = true;
         this.inputField.focus();
         delete this._showing;
